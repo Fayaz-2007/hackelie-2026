@@ -1,0 +1,6 @@
+cd C:\Users\FAYAZ\hackelie-2026
+venv\Scripts\uvicorn backend.main:app --reload --port 8000
+
+cd C:\Users\FAYAZ\hackelie-2026
+venv\Scripts\python backend\mock_esp32.py
+
