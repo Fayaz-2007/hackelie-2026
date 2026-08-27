@@ -1,6 +1,20 @@
-cd C:\Users\FAYAZ\hackelie-2026
-venv\Scripts\uvicorn backend.main:app --reload --port 8000
+How to run it yourself
 
-cd C:\Users\FAYAZ\hackelie-2026
-venv\Scripts\python backend\mock_esp32.py
+1. Backend (from project root, one-time venv setup already done):
 
+venv/Scripts/python.exe -m uvicorn backend.main:app --reload --port 8000
+
+2. Frontend (from frontend/, npm install already done):
+
+npm run dev
+
+Then open http://localhost:5173.
+
+3. (Optional) Simulate sensor data to see it live, since there's no real ESP32 attached:
+
+venv/Scripts/python.exe backend/mock_esp32.py
+# or inject a demo event:
+venv/Scripts/python.exe backend/mock_esp32.py --trigger-leak-at 10
+venv/Scripts/python.exe backend/mock_esp32.py --trigger-flame-at 15
+
+If you ever recreate the venv from scratch: python -m venv venv && venv/Scripts/pip install -r backend/requirements.txt.

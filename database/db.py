@@ -39,8 +39,35 @@ def init_db():
             )
             """
         )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS bookings (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                timestamp TEXT NOT NULL,
+                fill_percent REAL,
+                remaining_days REAL
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS settings (
+                id INTEGER PRIMARY KEY CHECK (id = 1),
+                registered_mobile_number TEXT NOT NULL DEFAULT '',
+                provider_name TEXT NOT NULL DEFAULT '',
+                provider_booking_url TEXT NOT NULL DEFAULT ''
+            )
+            """
+        )
+        conn.execute(
+            """
+            INSERT OR IGNORE INTO settings (id, registered_mobile_number, provider_name, provider_booking_url)
+            VALUES (1, '', '', '')
+            """
+        )
         conn.execute("CREATE INDEX IF NOT EXISTS idx_readings_timestamp ON readings(timestamp)")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_alerts_timestamp ON alerts(timestamp)")
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_bookings_timestamp ON bookings(timestamp)")
         conn.commit()
     finally:
         conn.close()
@@ -113,5 +140,71 @@ def get_recent_alerts(limit=50):
             "SELECT * FROM alerts ORDER BY id DESC LIMIT ?", (limit,)
         ).fetchall()
         return [dict(row) for row in rows]
+    finally:
+        conn.close()
+
+
+def insert_booking(fill_percent, remaining_days):
+    conn = get_connection()
+    try:
+        timestamp = _now_iso()
+        cursor = conn.execute(
+            """
+            INSERT INTO bookings (timestamp, fill_percent, remaining_days)
+            VALUES (?, ?, ?)
+            """,
+            (timestamp, fill_percent, remaining_days),
+        )
+        conn.commit()
+        row = conn.execute("SELECT * FROM bookings WHERE id = ?", (cursor.lastrowid,)).fetchone()
+        return dict(row)
+    finally:
+        conn.close()
+
+
+def get_recent_bookings(limit=50):
+    conn = get_connection()
+    try:
+        rows = conn.execute(
+            "SELECT * FROM bookings ORDER BY id DESC LIMIT ?", (limit,)
+        ).fetchall()
+        return [dict(row) for row in rows]
+    finally:
+        conn.close()
+
+
+def get_settings():
+    conn = get_connection()
+    try:
+        row = conn.execute("SELECT * FROM settings WHERE id = 1").fetchone()
+        if row:
+            return dict(row)
+        return {
+            "id": 1,
+            "registered_mobile_number": "",
+            "provider_name": "",
+            "provider_booking_url": "",
+        }
+    finally:
+        conn.close()
+
+
+def update_settings(registered_mobile_number, provider_name, provider_booking_url):
+    conn = get_connection()
+    try:
+        conn.execute(
+            """
+            INSERT INTO settings (id, registered_mobile_number, provider_name, provider_booking_url)
+            VALUES (1, ?, ?, ?)
+            ON CONFLICT(id) DO UPDATE SET
+                registered_mobile_number = excluded.registered_mobile_number,
+                provider_name = excluded.provider_name,
+                provider_booking_url = excluded.provider_booking_url
+            """,
+            (registered_mobile_number, provider_name, provider_booking_url),
+        )
+        conn.commit()
+        row = conn.execute("SELECT * FROM settings WHERE id = 1").fetchone()
+        return dict(row)
     finally:
         conn.close()

@@ -59,9 +59,15 @@ def main():
     parser.add_argument("--ticks", type=int, default=0, help="Number of readings to send (0 = run forever).")
     parser.add_argument("--trigger-leak-at", type=int, default=None, help="Tick at which to inject a simulated gas leak spike.")
     parser.add_argument("--trigger-flame-at", type=int, default=None, help="Tick at which to inject a simulated flame event.")
+    parser.add_argument(
+        "--start-weight",
+        type=float,
+        default=STARTING_WEIGHT_KG,
+        help="Initial cylinder weight in kg. Use e.g. 17.0 to start below 15%% fill and exercise the booking banner.",
+    )
     args = parser.parse_args()
 
-    weight_kg = STARTING_WEIGHT_KG
+    weight_kg = max(TARE_WEIGHT_KG, args.start_weight)
     tick = 0
 
     print(f"[mock_esp32] Posting to {args.url} every {args.interval}s (Ctrl+C to stop)")

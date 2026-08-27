@@ -15,10 +15,14 @@ from backend.analytics import ANALYTICS_HISTORY_LIMIT, analyze_reading
 from database.db import (
     get_latest_reading,
     get_recent_alerts,
+    get_recent_bookings,
     get_recent_readings,
+    get_settings,
     init_db,
     insert_alert,
+    insert_booking,
     insert_reading,
+    update_settings,
 )
 
 
@@ -44,6 +48,17 @@ class SensorData(BaseModel):
     gas_ppm: float
     temp_c: float
     flame_detected: bool
+
+
+class BookingEvent(BaseModel):
+    fill_percent: float | None = None
+    remaining_days: float | None = None
+
+
+class Settings(BaseModel):
+    registered_mobile_number: str = ""
+    provider_name: str = ""
+    provider_booking_url: str = ""
 
 
 class ConnectionManager:
@@ -92,6 +107,35 @@ async def post_sensor_data(data: SensorData):
     }
     await manager.broadcast(payload)
     return payload
+
+
+@app.post("/api/booking-initiated")
+def post_booking_initiated(event: BookingEvent):
+    """Log a row whenever the user clicks 'Book Cylinder'.
+
+    Captures the fill%/remaining-days at that moment so the pitch can quote
+    'system triggered N proactive booking prompts'.
+    """
+    return insert_booking(event.fill_percent, event.remaining_days)
+
+
+@app.get("/api/bookings")
+def get_bookings(limit: int = 50):
+    return get_recent_bookings(limit)
+
+
+@app.get("/api/settings")
+def read_settings():
+    return get_settings()
+
+
+@app.post("/api/settings")
+def write_settings(settings: Settings):
+    return update_settings(
+        settings.registered_mobile_number,
+        settings.provider_name,
+        settings.provider_booking_url,
+    )
 
 
 @app.get("/api/latest")

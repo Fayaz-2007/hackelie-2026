@@ -18,6 +18,18 @@ async function getJson(path) {
   return response.json()
 }
 
+async function postJson(path, body) {
+  const response = await fetch(`${API_BASE}${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  })
+  if (!response.ok) {
+    throw new Error(`${path} responded ${response.status}`)
+  }
+  return response.json()
+}
+
 export function fetchLatest() {
   return getJson('/api/latest')
 }
@@ -28,4 +40,16 @@ export function fetchHistory(limit = 100) {
 
 export function fetchAlerts(limit = 50) {
   return getJson(`/api/alerts?limit=${limit}`)
+}
+
+export function fetchSettings() {
+  return getJson('/api/settings')
+}
+
+export function saveSettings(settings) {
+  return postJson('/api/settings', settings)
+}
+
+export function postBookingInitiated(event) {
+  return postJson('/api/booking-initiated', event)
 }

@@ -7,15 +7,11 @@ const STATUS_COLOR_VAR = {
   DANGER: 'var(--status-critical)',
 }
 
-function formatDays(days) {
-  if (days === null || days === undefined) return '—'
-  if (days < 1) return '<1'
-  return days.toFixed(1)
-}
-
-export default function CylinderPanel({ fillPercentage, daysRemaining, status }) {
+export default function CylinderPanel({ fillPercentage, remaining, status }) {
   const color = STATUS_COLOR_VAR[status] ?? STATUS_COLOR_VAR.SAFE
   const pct = fillPercentage ?? 0
+  const value = remaining?.value ?? '—'
+  const unit = remaining?.unit ?? 'remaining'
 
   return (
     <section className="panel cylinder-panel" aria-label="Cylinder status">
@@ -34,10 +30,8 @@ export default function CylinderPanel({ fillPercentage, daysRemaining, status })
         </FillGauge>
 
         <div className="cylinder-panel__days">
-          <span className="cylinder-panel__days-value">{formatDays(daysRemaining)}</span>
-          <span className="cylinder-panel__days-label">
-            {daysRemaining === null || daysRemaining === undefined ? 'Gathering data…' : 'days remaining'}
-          </span>
+          <span className="cylinder-panel__days-value">{value}</span>
+          <span className="cylinder-panel__days-label">{unit}</span>
         </div>
       </div>
     </section>
