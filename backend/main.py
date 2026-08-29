@@ -99,6 +99,11 @@ async def post_sensor_data(data: SensorData):
     proposed_alerts = analysis.pop("alerts")
     new_alerts = [insert_alert(a["type"], a["message"], a["severity"]) for a in proposed_alerts]
 
+    from backend.sms_alert import send_sms_alert
+    for a in proposed_alerts:
+        if a["severity"] in ("danger", "critical"):
+            send_sms_alert(f"SafeLPG ALERT: {a['message']}", alert_type=a["type"])
+
     payload = {
         "reading": reading,
         "status": analysis["status"],

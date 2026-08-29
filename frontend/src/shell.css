@@ -1,0 +1,128 @@
+/* App shell: sidebar + main content. Isolated from the dashboard's own
+   styles in index.css — the dashboard still renders exactly as before,
+   just inside .shell__main. */
+
+.shell {
+  display: flex;
+  min-height: 100vh;
+  background: var(--page);
+}
+
+.shell__main {
+  flex: 1;
+  min-width: 0;
+}
+
+.sidenav {
+  width: 216px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  background: rgba(26, 26, 25, 0.65);
+  backdrop-filter: blur(6px);
+  padding: 18px 12px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 20;
+}
+
+.sidenav__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px 16px;
+}
+
+.sidenav__mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(160deg, #23231f, #171715);
+  border: 1px solid var(--border);
+  color: var(--status-warning);
+}
+
+.sidenav__title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.sidenav__title span {
+  color: var(--status-warning);
+}
+
+.sidenav__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  background: none;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
+}
+.sidenav__item:hover {
+  color: var(--text-primary);
+  background: var(--surface-2);
+}
+.sidenav__item--active {
+  color: var(--text-primary);
+  background: rgba(57, 135, 229, 0.12);
+  border-color: rgba(57, 135, 229, 0.35);
+}
+
+.sidenav__emoji {
+  font-size: 1rem;
+  width: 1.3em;
+  text-align: center;
+}
+
+.sidenav__foot {
+  margin-top: auto;
+  padding: 10px;
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+@media (max-width: 760px) {
+  .shell {
+    flex-direction: column;
+  }
+  .sidenav {
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+    padding: 8px;
+    overflow-x: auto;
+  }
+  .sidenav__brand,
+  .sidenav__foot {
+    display: none;
+  }
+  .sidenav__item {
+    width: auto;
+    white-space: nowrap;
+    padding: 8px 10px;
+  }
+}
