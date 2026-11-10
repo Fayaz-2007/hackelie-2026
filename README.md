@@ -29,12 +29,21 @@ LPG cylinders run out or leak without warning, and manual checks only catch trou
 
 ## 🛠️ Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Frontend | ![React](https://img.shields.io/badge/React%2019-20232A?style=flat-square&logo=react&logoColor=61DAFB) ![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white) ![Recharts](https://img.shields.io/badge/Recharts-FF6384?style=flat-square) |
-| Backend | ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white) ![Pydantic](https://img.shields.io/badge/Pydantic-E92063?style=flat-square&logo=pydantic&logoColor=white) ![WebSockets](https://img.shields.io/badge/WebSockets-black?style=flat-square) |
-| Database | ![SQLite](https://img.shields.io/badge/SQLite-07405E?style=flat-square&logo=sqlite&logoColor=white) |
-| Hardware (simulated) | ESP32 (weight, gas, temp, flame sensors) |
+**Frontend**
+
+![](https://skillicons.dev/icons?i=react,vite)
+
+**Backend**
+
+![](https://skillicons.dev/icons?i=fastapi,py)
+
+**Database**
+
+![](https://skillicons.dev/icons?i=sqlite)
+
+**Also using**
+
+![Recharts](https://img.shields.io/badge/Recharts-FF6384?style=for-the-badge) ![Pydantic](https://img.shields.io/badge/Pydantic-E92063?style=for-the-badge&logo=pydantic&logoColor=white) ![WebSockets](https://img.shields.io/badge/WebSockets-black?style=for-the-badge) ![ESP32](https://img.shields.io/badge/ESP32-E7352C?style=for-the-badge&logo=espressif&logoColor=white)
 
 ## 🏗️ Architecture
 
